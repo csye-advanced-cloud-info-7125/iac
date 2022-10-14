@@ -5,8 +5,8 @@ variable "region" {
 }
 
 variable "zones" {
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
-  type        = list(string)
+  default     = "us-east-1a,us-east-1b,us-east-1c"
+  type        = string
   description = "AWS zones to deploy kops cluster"
 }
 
@@ -68,4 +68,16 @@ variable "instance_image" {
   type        = string
   default     = "ami-08c40ec9ead489470"
   description = "Image for kops cluster"
+}
+
+variable "clustervpcName" {
+  default     = "cluster"
+  type        = string
+  description = "(optional) describe your variable"
+}
+
+variable "cluster-vpc-cidr" {
+  default     = "10.100.0.0/16"
+  type        = string
+  description = "(optional) describe your variable"
 }

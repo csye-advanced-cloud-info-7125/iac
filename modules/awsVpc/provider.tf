@@ -11,7 +11,7 @@ provider "aws" {
   region = var.region
 }
 
-provider "aws" {
-  alias  = "cluster_region"
-  region = var.clusterregion
-}
+# provider "aws" {
+#   alias  = "cluster_region"
+#   region = var.clusterregion
+# }

@@ -266,7 +266,7 @@ CloudProvider: aws
 ConfigBase: s3://kops-s3-veer/kopscluster.prod.aws.virendrasinghrathore.me
 InstanceGroupName: master-us-east-1c
 InstanceGroupRole: Master
-NodeupConfigHash: tKnK18JdjeHyr15AZmldPMWAQ+jxwnhoZ6SZ/J0lVv8=
+NodeupConfigHash: Essse7+8BjDDaeGrWeVQ1IWWgS8oSMLv/37eTnGl9kI=
 
 __EOF_KUBE_ENV
 

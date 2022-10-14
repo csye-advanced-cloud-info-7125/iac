@@ -18,11 +18,11 @@
 
 # cluster_name = "kopscluster"
 
-region               = "us-west-2"
+region               = "us-east-1"
 clusterregion        = "us-east-1"
 vpc-cidr             = "10.0.0.0/16"
 private-subnet1-cidr = "10.0.1.0/24"
 private-subnet2-cidr = "10.0.2.0/24"
 private-subnet3-cidr = "10.0.3.0/24"
 cluster_name         = "kopscluster"
-vpcName              = "aws-vpc"
+vpcName              = "aws"

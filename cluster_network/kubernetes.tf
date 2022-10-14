@@ -24,8 +24,7 @@ locals {
   subnet_utility-us-east-1a_id      = aws_subnet.utility-us-east-1a-kopscluster-prod-aws-virendrasinghrathore-me.id
   subnet_utility-us-east-1b_id      = aws_subnet.utility-us-east-1b-kopscluster-prod-aws-virendrasinghrathore-me.id
   subnet_utility-us-east-1c_id      = aws_subnet.utility-us-east-1c-kopscluster-prod-aws-virendrasinghrathore-me.id
-  vpc_cidr_block                    = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.cidr_block
-  vpc_id                            = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id                            = "vpc-05c0811697ceda682"
 }
 
 output "bastion_autoscaling_group_ids" {
@@ -128,12 +127,8 @@ output "subnet_utility-us-east-1c_id" {
   value = aws_subnet.utility-us-east-1c-kopscluster-prod-aws-virendrasinghrathore-me.id
 }
 
-output "vpc_cidr_block" {
-  value = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.cidr_block
-}
-
 output "vpc_id" {
-  value = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  value = "vpc-05c0811697ceda682"
 }
 
 provider "aws" {
@@ -798,15 +793,6 @@ resource "aws_iam_role_policy" "nodes-kopscluster-prod-aws-virendrasinghrathore-
   role   = aws_iam_role.nodes-kopscluster-prod-aws-virendrasinghrathore-me.name
 }
 
-resource "aws_internet_gateway" "kopscluster-prod-aws-virendrasinghrathore-me" {
-  tags = {
-    "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
-    "Name"                                                               = "kopscluster.prod.aws.virendrasinghrathore.me"
-    "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
-  }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
-}
-
 resource "aws_key_pair" "kubernetes-kopscluster-prod-aws-virendrasinghrathore-me-cd16abb71b719762b571dc5ff95664b6" {
   key_name   = "kubernetes.kopscluster.prod.aws.virendrasinghrathore.me-cd:16:ab:b7:1b:71:97:62:b5:71:dc:5f:f9:56:64:b6"
   public_key = file("${path.module}/data/aws_key_pair_kubernetes.kopscluster.prod.aws.virendrasinghrathore.me-cd16abb71b719762b571dc5ff95664b6_public_key")
@@ -1386,13 +1372,13 @@ resource "aws_nat_gateway" "us-east-1c-kopscluster-prod-aws-virendrasinghrathore
 
 resource "aws_route" "route-0-0-0-0--0" {
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.kopscluster-prod-aws-virendrasinghrathore-me.id
+  gateway_id             = "igw-0a737c5606323d539"
   route_table_id         = aws_route_table.kopscluster-prod-aws-virendrasinghrathore-me.id
 }
 
 resource "aws_route" "route-__--0" {
   destination_ipv6_cidr_block = "::/0"
-  gateway_id                  = aws_internet_gateway.kopscluster-prod-aws-virendrasinghrathore-me.id
+  gateway_id                  = "igw-0a737c5606323d539"
   route_table_id              = aws_route_table.kopscluster-prod-aws-virendrasinghrathore-me.id
 }
 
@@ -1443,7 +1429,7 @@ resource "aws_route_table" "kopscluster-prod-aws-virendrasinghrathore-me" {
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/kops/role"                                            = "public"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_route_table" "private-us-east-1a-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1453,7 +1439,7 @@ resource "aws_route_table" "private-us-east-1a-kopscluster-prod-aws-virendrasing
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/kops/role"                                            = "private-us-east-1a"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_route_table" "private-us-east-1b-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1463,7 +1449,7 @@ resource "aws_route_table" "private-us-east-1b-kopscluster-prod-aws-virendrasing
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/kops/role"                                            = "private-us-east-1b"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_route_table" "private-us-east-1c-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1473,7 +1459,7 @@ resource "aws_route_table" "private-us-east-1c-kopscluster-prod-aws-virendrasing
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/kops/role"                                            = "private-us-east-1c"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_route_table_association" "private-us-east-1a-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1722,7 +1708,7 @@ resource "aws_security_group" "api-elb-kopscluster-prod-aws-virendrasinghrathore
     "Name"                                                               = "api-elb.kopscluster.prod.aws.virendrasinghrathore.me"
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_security_group" "bastion-elb-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1733,7 +1719,7 @@ resource "aws_security_group" "bastion-elb-kopscluster-prod-aws-virendrasinghrat
     "Name"                                                               = "bastion-elb.kopscluster.prod.aws.virendrasinghrathore.me"
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_security_group" "bastion-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1744,7 +1730,7 @@ resource "aws_security_group" "bastion-kopscluster-prod-aws-virendrasinghrathore
     "Name"                                                               = "bastion.kopscluster.prod.aws.virendrasinghrathore.me"
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_security_group" "masters-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1755,7 +1741,7 @@ resource "aws_security_group" "masters-kopscluster-prod-aws-virendrasinghrathore
     "Name"                                                               = "masters.kopscluster.prod.aws.virendrasinghrathore.me"
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_security_group" "nodes-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -1766,7 +1752,7 @@ resource "aws_security_group" "nodes-kopscluster-prod-aws-virendrasinghrathore-m
     "Name"                                                               = "nodes.kopscluster.prod.aws.virendrasinghrathore.me"
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_security_group_rule" "from-0-0-0-0--0-ingress-tcp-22to22-bastion-elb-kopscluster-prod-aws-virendrasinghrathore-me" {
@@ -2023,7 +2009,7 @@ resource "aws_security_group_rule" "icmpv6-pmtu-api-elb-__--0" {
 
 resource "aws_subnet" "us-east-1a-kopscluster-prod-aws-virendrasinghrathore-me" {
   availability_zone = "us-east-1a"
-  cidr_block        = "172.20.32.0/19"
+  cidr_block        = "10.100.32.0/19"
   tags = {
     "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
     "Name"                                                               = "us-east-1a.kopscluster.prod.aws.virendrasinghrathore.me"
@@ -2034,12 +2020,12 @@ resource "aws_subnet" "us-east-1a-kopscluster-prod-aws-virendrasinghrathore-me" 
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/role/internal-elb"                                    = "1"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_subnet" "us-east-1b-kopscluster-prod-aws-virendrasinghrathore-me" {
   availability_zone = "us-east-1b"
-  cidr_block        = "172.20.64.0/19"
+  cidr_block        = "10.100.64.0/19"
   tags = {
     "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
     "Name"                                                               = "us-east-1b.kopscluster.prod.aws.virendrasinghrathore.me"
@@ -2050,12 +2036,12 @@ resource "aws_subnet" "us-east-1b-kopscluster-prod-aws-virendrasinghrathore-me" 
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/role/internal-elb"                                    = "1"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_subnet" "us-east-1c-kopscluster-prod-aws-virendrasinghrathore-me" {
   availability_zone = "us-east-1c"
-  cidr_block        = "172.20.96.0/19"
+  cidr_block        = "10.100.96.0/19"
   tags = {
     "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
     "Name"                                                               = "us-east-1c.kopscluster.prod.aws.virendrasinghrathore.me"
@@ -2066,12 +2052,12 @@ resource "aws_subnet" "us-east-1c-kopscluster-prod-aws-virendrasinghrathore-me" 
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/role/internal-elb"                                    = "1"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_subnet" "utility-us-east-1a-kopscluster-prod-aws-virendrasinghrathore-me" {
   availability_zone = "us-east-1a"
-  cidr_block        = "172.20.0.0/22"
+  cidr_block        = "10.100.0.0/22"
   tags = {
     "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
     "Name"                                                               = "utility-us-east-1a.kopscluster.prod.aws.virendrasinghrathore.me"
@@ -2079,12 +2065,12 @@ resource "aws_subnet" "utility-us-east-1a-kopscluster-prod-aws-virendrasinghrath
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/role/elb"                                             = "1"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_subnet" "utility-us-east-1b-kopscluster-prod-aws-virendrasinghrathore-me" {
   availability_zone = "us-east-1b"
-  cidr_block        = "172.20.4.0/22"
+  cidr_block        = "10.100.4.0/22"
   tags = {
     "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
     "Name"                                                               = "utility-us-east-1b.kopscluster.prod.aws.virendrasinghrathore.me"
@@ -2092,12 +2078,12 @@ resource "aws_subnet" "utility-us-east-1b-kopscluster-prod-aws-virendrasinghrath
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/role/elb"                                             = "1"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 resource "aws_subnet" "utility-us-east-1c-kopscluster-prod-aws-virendrasinghrathore-me" {
   availability_zone = "us-east-1c"
-  cidr_block        = "172.20.8.0/22"
+  cidr_block        = "10.100.8.0/22"
   tags = {
     "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
     "Name"                                                               = "utility-us-east-1c.kopscluster.prod.aws.virendrasinghrathore.me"
@@ -2105,34 +2091,7 @@ resource "aws_subnet" "utility-us-east-1c-kopscluster-prod-aws-virendrasinghrath
     "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
     "kubernetes.io/role/elb"                                             = "1"
   }
-  vpc_id = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
-}
-
-resource "aws_vpc" "kopscluster-prod-aws-virendrasinghrathore-me" {
-  assign_generated_ipv6_cidr_block = true
-  cidr_block                       = "172.20.0.0/16"
-  enable_dns_hostnames             = true
-  enable_dns_support               = true
-  tags = {
-    "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
-    "Name"                                                               = "cluster-vpc"
-    "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
-  }
-}
-
-resource "aws_vpc_dhcp_options" "kopscluster-prod-aws-virendrasinghrathore-me" {
-  domain_name         = "ec2.internal"
-  domain_name_servers = ["AmazonProvidedDNS"]
-  tags = {
-    "KubernetesCluster"                                                  = "kopscluster.prod.aws.virendrasinghrathore.me"
-    "Name"                                                               = "kopscluster.prod.aws.virendrasinghrathore.me"
-    "kubernetes.io/cluster/kopscluster.prod.aws.virendrasinghrathore.me" = "owned"
-  }
-}
-
-resource "aws_vpc_dhcp_options_association" "kopscluster-prod-aws-virendrasinghrathore-me" {
-  dhcp_options_id = aws_vpc_dhcp_options.kopscluster-prod-aws-virendrasinghrathore-me.id
-  vpc_id          = aws_vpc.kopscluster-prod-aws-virendrasinghrathore-me.id
+  vpc_id = "vpc-05c0811697ceda682"
 }
 
 terraform {
