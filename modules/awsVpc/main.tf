@@ -1,5 +1,5 @@
 data "aws_vpc" "requestorvpc" {
-  provider = aws.cluster_region
+  # provider = aws.cluster_region
   filter {
     name   = "tag:Name"
     values = ["cluster-vpc"]
@@ -15,8 +15,8 @@ data "aws_vpc" "requestorvpc" {
 #   }
 # }
 data "aws_route_tables" "requestor_rtb" {
-  provider = aws.cluster_region
-  vpc_id   = data.aws_vpc.requestorvpc.id
+  # provider = aws.cluster_region
+  vpc_id = data.aws_vpc.requestorvpc.id
   filter {
     name   = "tag:Name"
     values = ["private-*.${var.cluster_name}.${var.domain}"]
@@ -24,8 +24,8 @@ data "aws_route_tables" "requestor_rtb" {
 }
 
 data "aws_security_group" "acceptor-node-sg" {
-  provider = aws.cluster_region
-  vpc_id   = data.aws_vpc.requestorvpc.id
+  # provider = aws.cluster_region
+  vpc_id = data.aws_vpc.requestorvpc.id
   filter {
     name   = "tag:Name"
     values = ["nodes.${var.cluster_name}.${var.domain}"]
@@ -190,7 +190,7 @@ resource "aws_vpc_peering_connection" "clusterVpc-to-awsVpc" {
 }
 
 resource "aws_vpc_peering_connection_accepter" "accept" {
-  provider = aws.cluster_region
+  # provider = aws.cluster_region
   depends_on = [
     aws_vpc_peering_connection.clusterVpc-to-awsVpc
   ]
@@ -216,7 +216,7 @@ resource "aws_vpc_peering_connection_accepter" "accept" {
 resource "aws_route" "accepter_route" {
 
   depends_on = [
-    aws_vpc.vpc
+    aws_vpc.vpc, aws_vpc_peering_connection.clusterVpc-to-awsVpc
   ]
   route_table_id            = aws_route_table.private-subnet-route-table.id
   destination_cidr_block    = data.aws_vpc.requestorvpc.cidr_block
@@ -229,7 +229,10 @@ resource "aws_route" "accepter_route" {
 
 ### Requestor route
 resource "aws_route" "requestor_route" {
-  provider = aws.cluster_region
+  depends_on = [
+    aws_vpc_peering_connection.clusterVpc-to-awsVpc
+  ]
+  # provider = aws.cluster_region
   # route_table_id            = aws_route_table.private-subnet-route-table.id
   # destination_cidr_block    = data.aws_vpc.requestorvpc.cidr_block
   # vpc_peering_connection_id = aws_vpc_peering_connection.clusterVpc-to-awsVpc.id
@@ -251,10 +254,10 @@ resource "aws_security_group" "postgres-rds" {
   vpc_id      = aws_vpc.vpc.id
   # Only postgres in
   ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["172.20.0.0/16"]
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = ["${data.aws_security_group.acceptor-node-sg.id}"]
   }
 }
 

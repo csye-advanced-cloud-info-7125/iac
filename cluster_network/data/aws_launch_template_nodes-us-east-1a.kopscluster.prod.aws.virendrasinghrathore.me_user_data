@@ -167,7 +167,7 @@ CloudProvider: aws
 ConfigBase: s3://kops-s3-veer/kopscluster.prod.aws.virendrasinghrathore.me
 InstanceGroupName: nodes-us-east-1a
 InstanceGroupRole: Node
-NodeupConfigHash: y2OVippOZ6IDQaT6WfsDfiRzkTU/bBn53RP8qfgwZhM=
+NodeupConfigHash: a9a/OFgON0D/RbmZ4Uckn9vLtHsFn146EGnDYJnUyPo=
 
 __EOF_KUBE_ENV
 

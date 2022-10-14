@@ -40,7 +40,7 @@ spec:
       - args:
         - --watch-ingress=false
         - --dns=aws-route53
-        - --zone=prod.aws.virendrasinghrathore.me
+        - --zone=*/Z0704773X66WDJYFA1T5
         - --internal-ipv4
         - --zone=*/*
         - -v=2

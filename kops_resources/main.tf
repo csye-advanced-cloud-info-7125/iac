@@ -1,3 +1,28 @@
+#vpc for cluster:
+#--------------------------------------
+resource "aws_vpc" "cluster-vpc" {
+  cidr_block           = var.cluster-vpc-cidr
+  instance_tenancy     = "default"
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "${var.clustervpcName}-vpc"
+  }
+}
+
+resource "aws_internet_gateway" "internet_gateway_cluster_vpc" {
+  depends_on = [
+    aws_vpc.cluster-vpc
+  ]
+  vpc_id = aws_vpc.cluster-vpc.id
+
+  tags = {
+    Name = "${aws_vpc.cluster-vpc.id}-igw"
+  }
+}
+
+#-------------------------------------
+
 resource "aws_s3_bucket" "kops_state" {
   bucket        = var.kops_state_store_s3_bucket_name
   force_destroy = true
@@ -75,7 +100,7 @@ resource "aws_iam_policy_attachment" "kops_iam_user_policy" {
 
 resource "null_resource" "create_cluster" {
 
-  depends_on = [aws_iam_user.kops_iam_user, aws_s3_bucket.kops_state]
+  depends_on = [aws_iam_user.kops_iam_user, aws_s3_bucket.kops_state, aws_vpc.cluster-vpc]
 
   provisioner "local-exec" {
     command = <<EOT
@@ -83,20 +108,21 @@ resource "null_resource" "create_cluster" {
      aws configure set aws_secret_access_key ${aws_iam_access_key.kops_iam_user_access_key.secret} --profile ${aws_iam_user.kops_iam_user.name} && \
      aws configure set region ${var.region} --profile ${aws_iam_user.kops_iam_user.name} && \
      aws configure set output "json" --profile ${aws_iam_user.kops_iam_user.name}
+     sed -i '' '/bastion/d' ~/.ssh/known_hosts
     EOT    
   }
 
-  # provisioner "local-exec" {
+  provisioner "local-exec" {
 
-  #   environment = {
-  #     AWS_PROFILE       = aws_iam_user.kops_iam_user.name
-  #     AWS_REGION        = var.region
-  #     KOPS_STATE_STORE  = "s3://${aws_s3_bucket.kops_state.bucket}"
-  #   }
+    environment = {
+      AWS_PROFILE      = aws_iam_user.kops_iam_user.name
+      AWS_REGION       = var.region
+      KOPS_STATE_STORE = "s3://${aws_s3_bucket.kops_state.bucket}"
+    }
 
-  #   command = <<EOT
-  #     sleep 50
-  #     kops create cluster --name="${var.cluster_name}.${var.domain}" --node-count=3 --zones=${var.zones} --node-size=${var.node_size} --master-size=${var.master_size} --master-zones=${var.zones} --networking=calico --topology=private --kubernetes-version=1.22.15 --master-image=${var.instance_image} --node-image=${var.instance_image} --ssh-public-key=${var.ssh_public_key} --bastion=true --yes
-  #   EOT
-  # }
+    command = <<EOT
+      sleep 50
+      kops create cluster --name="${var.cluster_name}.${var.domain}" --node-count=3 --zones=${var.zones} --node-size=${var.node_size} --master-size=${var.master_size} --master-zones=${var.zones} --networking=calico --topology=private --kubernetes-version=1.22.15 --master-image=${var.instance_image} --node-image=${var.instance_image} --ssh-public-key=${var.ssh_public_key} --bastion=true --vpc=${aws_vpc.cluster-vpc.id} --out=../cluster_network --target=terraform
+    EOT
+  }
 }
